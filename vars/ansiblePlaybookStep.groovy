@@ -35,7 +35,7 @@ void call(Map config) {
         "TARGET=${config.targetHost}:${config.targetPort},"
     ]) {
         withCredentials(credentialBindings) {
-            sh 'ansible-playbook "${PLAYBOOK_PATH}" -i "${TARGET}" -e "@${EXTRA_VARS_PATH}"'
+            sh 'ansible-playbook "$PLAYBOOK_PATH" -i "$TARGET" -e "@$EXTRA_VARS_PATH"'
         }
     }
 }

@@ -99,7 +99,7 @@ void call(Map configParams = [:]) {
                         source_directory:       pwd(),
                         quadlet_rm:             params.QUADLET_RM,
                         force_restart:          params.FORCE_RESTART,
-                        staging_exclusions:     (config.stagingExclusions + config.additionalStagingExclusions).findAll { it?.trim() }.collect { "--exclude=${it.trim()}" },
+                        staging_exclusions:     (config.stagingExclusions + config.additionalStagingExclusions).findAll { exclusion -> exclusion?.trim() }.collect { exclusion -> "--exclude=${exclusion.trim()}" },
                         podman_secret_mappings: secretMetadata
                     ]
                 )
@@ -229,6 +229,6 @@ private void validateParameters() {
     }
     int targetPort = params.TARGET_PORT.toInteger()
     if (targetPort < 1 || targetPort > 65535) {
-        error("TARGET_PORT must be between 1 and 65535")
+        error('TARGET_PORT must be between 1 and 65535')
     }
 }
