@@ -44,3 +44,8 @@ Detailed documentation for each pipeline and step is located in the `docs/` fold
 - [containerImagePipeline](docs/containerImagePipeline.md)
 - [quadletPipeline](docs/quadletPipeline.md)
 - [securityScanStep](docs/securityScanStep.md)
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
