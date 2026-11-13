@@ -63,6 +63,7 @@ The Jenkins agent requires:
 The target Linux host requires:
 
 - SSH access for the deployment user
+- A verified host public-key entry in the shared library's `resources/known_hosts` file
 - Podman 6 or later
 - Rootless Podman and a running user systemd manager
 - `python3`
@@ -232,4 +233,3 @@ quadletPipeline(
 - Concurrent builds of the same job are disabled by default. Build-specific staging paths also prevent separate jobs from overwriting one another's staged files.
 - The Jenkins workspace is cleaned after every run using the Workspace Cleanup plugin.
 - Failure notifications use the Jenkins `ALERT_EMAIL` environment variable by default. Set `alertEmail` in the Jenkinsfile to override it; notifications are disabled when neither provides an address.
-- Host key checking is disabled because agents are ephemeral. Use this pipeline only with trusted deployment targets and networks.

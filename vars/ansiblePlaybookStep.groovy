@@ -10,12 +10,14 @@ void call(Map config) {
 
     String tmpDir = pwd(tmp: true)
     String extraVarsPath = "${tmpDir}/extra-vars.json"
+    String knownHostsPath = "${tmpDir}/known_hosts"
     String playbookPath = config.playbookPath
     if (hasPlaybookResource) {
         playbookPath = "${tmpDir}/playbook.yaml"
         writeFile(file: playbookPath, text: libraryResource(config.playbookResource))
     }
     writeFile(file: extraVarsPath, text: groovy.json.JsonOutput.toJson(config.extraVars))
+    writeFile(file: knownHostsPath, text: libraryResource('known_hosts'))
 
     List credentialBindings = [
         sshUserPrivateKey(
@@ -27,7 +29,7 @@ void call(Map config) {
     credentialBindings.addAll(config.credentialBindings ?: [])
 
     withEnv([
-        'ANSIBLE_HOST_KEY_CHECKING=False',
+        "ANSIBLE_SSH_COMMON_ARGS=-o UserKnownHostsFile=${knownHostsPath} -o StrictHostKeyChecking=yes",
         'ANSIBLE_CALLBACKS_ENABLED=ansible.posix.profile_tasks',
         'ANSIBLE_CALLBACK_RESULT_FORMAT=yaml',
         "EXTRA_VARS_PATH=${extraVarsPath}",

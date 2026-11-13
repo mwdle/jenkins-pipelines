@@ -11,9 +11,10 @@ The step performs the common setup required by the Ansible-backed pipelines in t
 1. **Playbook Resolution:** Uses either a playbook already present in the Jenkins workspace or a playbook embedded in this shared library.
 2. **Extra Variables:** Serializes the supplied map to a temporary JSON file and passes it to Ansible with `-e @<file>`.
 3. **SSH Authentication:** Binds a Jenkins SSH Username with private key credential to Ansible's standard environment variables.
-4. **Additional Credentials:** Optionally binds other Jenkins credentials for lookup from the playbook or supporting tasks.
-5. **Single-Host Inventory:** Constructs an inline inventory from the configured target host and port.
-6. **Consistent Output:** Enables the `ansible.posix.profile_tasks` callback and YAML-formatted task results.
+4. **SSH Host Verification:** Writes the version-controlled `resources/known_hosts` file to a temporary file and passes it to OpenSSH, rejecting an SSH target whose host key is not listed.
+5. **Additional Credentials:** Optionally binds other Jenkins credentials for lookup from the playbook or supporting tasks.
+6. **Single-Host Inventory:** Constructs an inline inventory from the configured target host and port.
+7. **Consistent Output:** Enables the `ansible.posix.profile_tasks` callback and YAML-formatted task results.
 
 Exactly one of `playbookPath` or `playbookResource` must be provided.
 
@@ -159,7 +160,7 @@ In this example, `deploy.yaml` is stored in the application repository and can r
 
 ## Security and Behavior Notes
 
-- Host-key checking is disabled. Use this step only with trusted targets and networks.
+- Host-key checking is strict. Add each target's verified host public key to `resources/known_hosts`; use `[hostname]:port` for non-default SSH ports.
 - Do not place secret values in `extraVars`; the resulting JSON file exists in the Jenkins workspace temporary directory. Bind secrets with `credentialBindings` and read them through Ansible's environment lookup instead.
 - The SSH credential supplies both `ANSIBLE_PRIVATE_KEY_FILE` and `ANSIBLE_REMOTE_USER`.
 - The inventory contains only `targetHost:targetPort`; this step is intentionally scoped to a single SSH target.
